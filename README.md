@@ -19,7 +19,7 @@ This project sets up a PhoenixD server with a backend and frontend, all managed 
 ### Instructions
 1. Clone the Repository:
 ```bash
-git clone --recurse-submodules <repo-url>
+git clone --recurse-submodules https://github.com/MiguelMedeiros/workshop-phoenixd.git
 cd workshop
 ```
 
