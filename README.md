@@ -1,8 +1,5 @@
 # 🛠️ PhoenixD Workshop
-<video width="100%" controls>
-  <source src="./4_docs/presentation.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/3dcdf691-3bab-4606-a6a5-ab43f7585978
 
 
 ## Project Description
