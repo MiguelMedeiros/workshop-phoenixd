@@ -1,8 +1,6 @@
-# 🛠️ PhoenixD Workshop
+# 🛠️ PhoenixD Server Workshop
 https://github.com/user-attachments/assets/3dcdf691-3bab-4606-a6a5-ab43f7585978
 
-
-## Project Description
 
 This project sets up a PhoenixD server with a backend and frontend, all managed through Docker Compose.
 
@@ -13,28 +11,28 @@ This project sets up a PhoenixD server with a backend and frontend, all managed 
 
 ### Instructions
 1. Clone the Repository:
-```
+```bash
 git clone --recurse-submodules <repo-url>
 cd workshop
 ```
 
 2. Configure Environment Variables:
 
-    2.1 For the backend (0_backend/.env):
+    2.1 For the backend `0_backend/.env`:
     ```
     PORT=4269
     PHOENIX_TOKEN= (set this to the http-password from 3_phoenixd/phoenix.conf)
     PHOENIX_HOST=http://phoenixd:9740
     ```
 
-    2.2 For the frontend (1_frontend/.env):
+    2.2 For the frontend `1_frontend/.env`:
     ```
     NEXT_PUBLIC_BACKEND_URL=https://workshop-backend.miguelmedeiros.dev
     NEXT_PUBLIC_LIMIT_MESSAGES=5
     ```
 
 3. Start the Services:
-```
+```bash
 docker-compose up --build
 ```
 
