@@ -1,0 +1,49 @@
+version: "3"
+
+services:
+  phoenixd:
+    build:
+      context: ./submodules/phoenixd
+      dockerfile: .docker/Dockerfile
+    ports:
+      - 9740:9740
+    volumes:
+      - ./3_phoenixd:/phoenix/.phoenix
+    restart: always
+    networks:
+      - workshop-network
+
+  workshop-backend:
+    build:
+      context: ./0_backend
+      dockerfile: ./Dockerfile
+    ports:
+      - 4269:4269
+    env_file:
+      - ./0_backend/.env
+    volumes:
+      - ./0_backend:/usr/src/app
+      - ./0_backend/data:/usr/src/app/data
+    restart: always
+    depends_on:
+      - phoenixd
+    networks:
+      - workshop-network
+
+  workshop-frontend:
+    build:
+      context: ./1_frontend
+      dockerfile: ./Dockerfile
+    ports:
+      - 3005:3000
+    volumes:
+      - ./1_frontend:/usr/src/app
+    restart: always
+    depends_on:
+      - workshop-backend
+    networks:
+      - workshop-network
+
+networks:
+  workshop-network:
+    driver: bridge
