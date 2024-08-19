@@ -4,7 +4,16 @@ https://github.com/user-attachments/assets/3dcdf691-3bab-4606-a6a5-ab43f7585978
 
 This project sets up a PhoenixD server with a backend and frontend, all managed through Docker Compose.
 
+## Architecture
+- **PhoenixD**: A decentralized, secure, and scalable blockchain platform.
+- **Backend**: A REST API that interacts with the PhoenixD node.
+- **Frontend**: A web interface that displays the latest blocks and transactions.
+
+![Architecture](https://github.com/user-attachments/assets/609414f1-ac99-4b4a-9bbb-4ee6d46d6bad)
+
 ## 🚀 Quick Start with Docker Compose
+
+![image](https://github.com/user-attachments/assets/609414f1-ac99-4b4a-9bbb-4ee6d46d6bad)
 
 ### Requirements
 - Docker and Docker Compose installed.
