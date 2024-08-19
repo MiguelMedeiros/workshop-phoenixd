@@ -13,8 +13,6 @@ This project sets up a PhoenixD server with a backend and frontend, all managed 
 
 ## 🚀 Quick Start with Docker Compose
 
-![image](https://github.com/user-attachments/assets/609414f1-ac99-4b4a-9bbb-4ee6d46d6bad)
-
 ### Requirements
 - Docker and Docker Compose installed.
 
