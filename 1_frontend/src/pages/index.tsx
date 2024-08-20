@@ -11,6 +11,7 @@ import MessagesSection from "@/components/MessageSection";
 import PopUpModal from "@/components/PopupModal";
 import FormMessage from "@/components/FormMessage";
 import InvoiceQR from "@/components/InvoiceQr";
+import { Circle, PersonStanding, Zap } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +31,26 @@ export default function Home() {
   const [author, setAuthor] = useState("");
   const [message, setMessage] = useState("");
   const [amount, setAmount] = useState(1000);
+  const [balance, setBalance] = useState(null);
+  const [nodeInfo, setNodeInfo] = useState<any>(null);
+  const [usersConnected, setUsersConnected] = useState(0);
+
+  const fetchNodeInfo = async () => {
+    const response = await axios.get(`${NEXT_PUBLIC_BACKEND_URL}/node-info`);
+
+    setNodeInfo(response.data.info);
+  };
+
+  const fetchBalance = async () => {
+    const response = await axios.get(`${NEXT_PUBLIC_BACKEND_URL}/balance`);
+
+    setBalance(response.data.balance);
+  };
+
+  useEffect(() => {
+    fetchBalance();
+    fetchNodeInfo();
+  }, []);
 
   const fetchInvoices = async (page: number) => {
     const response = await axios.get(`${NEXT_PUBLIC_BACKEND_URL}/invoices`, {
@@ -73,11 +94,16 @@ export default function Home() {
       cleanForm();
     });
 
+    socket.on("users-connected", (message) => {
+      setUsersConnected(message);
+    });
+
     socket.on("new-message", (message) => {
       const messageParsed = JSON.parse(message);
 
       setListInvoices((prevInvoices) => [messageParsed, ...prevInvoices]);
       setRunConfetti(true);
+      fetchBalance();
 
       setTimeout(() => {
         setRunConfetti(false);
@@ -129,6 +155,13 @@ export default function Home() {
         } items-center p-24 bg-gray-900 text-white ${inter.className}`}
       >
         <HeroSection setShowModal={setShowModal} />
+        {/* <UsersConnected usersConnected={usersConnected} /> */}
+        <DashboardSection
+          balance={balance}
+          usersConnected={usersConnected}
+          nodeInfo={nodeInfo}
+        />
+        {/* <NodeInfoSection nodeInfo={nodeInfo} /> */}
         <MessagesSection
           listInvoices={listInvoices}
           nextPage={nextPage}
@@ -176,3 +209,66 @@ export default function Home() {
     </>
   );
 }
+
+const DashboardSection = ({
+  balance,
+  usersConnected,
+  nodeInfo,
+}: {
+  balance: {
+    balanceSat: number;
+    feeCreditSat: number;
+  } | null;
+  usersConnected: number;
+  nodeInfo: any;
+}) => {
+  return (
+    <div className="flex flex-col items-center justify-center bg-gray-800 text-white p-6 rounded-lg shadow-lg w-full max-w-[710px]">
+      <div className="grid grid-cols-3 gap-12 p-4">
+        <div className="flex flex-col">
+          <div className="text-gray-400 text-[12px]">Online</div>
+          <div className="text-[20px] font-semibold text-purple-400 flex flex-row items-center">
+            <PersonStanding size={18} className="mr-1 text-purple-400" />
+            {usersConnected.toLocaleString()}
+          </div>
+        </div>
+
+        <div className="flex flex-col">
+          <div className="text-gray-400 text-[12px]">Balance</div>
+          <div className="text-[20px] font-semibold text-green-400 flex flex-row items-center">
+            <Zap size={18} className="mr-1" />
+            {balance?.balanceSat ? balance.balanceSat.toLocaleString() : 0}
+          </div>
+        </div>
+
+        <div className="flex flex-col">
+          <div className="text-gray-400 text-[12px]">Node ID</div>
+          <div className="text-[20px] font-semibold text-gray-200 flex flex-row items-center">
+            {nodeInfo?.nodeId.substring(0, 10)}...
+          </div>
+        </div>
+
+        <div className="flex flex-col">
+          <div className="text-gray-400 text-[12px]">Chain</div>
+          <div className="text-[20px] font-semibold text-gray-200 flex flex-row items-center">
+            {nodeInfo?.chain}
+          </div>
+        </div>
+
+        <div className="flex flex-col">
+          <div className="text-gray-400 text-[12px]">Block Height</div>
+          <div className="text-[20px] font-semibold text-gray-200 flex flex-row items-center">
+            {nodeInfo?.blockHeight}
+          </div>
+        </div>
+
+        <div className="flex flex-col">
+          <div className="text-gray-400 text-[12px]">Version</div>
+          <div className="text-[20px] font-semibold text-green-400 flex flex-row items-center">
+            {nodeInfo?.version}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

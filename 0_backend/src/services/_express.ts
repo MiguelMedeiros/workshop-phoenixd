@@ -103,17 +103,49 @@ const initExpress = async ({ phoenix, db }: Props) => {
         `Total users connected: ${Object.keys(connectedClients).length}`
       );
 
+      emitEventAll(
+        connectedClients,
+        "users-connected",
+        Object.keys(connectedClients).length
+      );
+
       socket.on("disconnect", () => {
         console.log(`User disconnected: ${socket.id}`);
         delete connectedClients[socket.id];
         console.log(
           `Total users connected: ${Object.keys(connectedClients).length}`
         );
+
+        emitEventAll(
+          connectedClients,
+          "users-connected",
+          Object.keys(connectedClients).length
+        );
       });
     });
 
     app.get("/", (req, res) => {
       res.json({ message: "Hello World!" });
+    });
+
+    app.get("/node-info", async (req, res) => {
+      try {
+        const info = await phoenix.getNodeInfo();
+
+        return res.json({ info });
+      } catch (error: any) {
+        res.status(500).json({ error: error.message });
+      }
+    });
+
+    app.get("/balance", async (req, res) => {
+      try {
+        const balance = await phoenix.getBalance();
+
+        return res.json({ balance });
+      } catch (error: any) {
+        res.status(500).json({ error: error.message });
+      }
     });
 
     app.get("/invoices", async (req, res) => {
